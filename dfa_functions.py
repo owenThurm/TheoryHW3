@@ -25,11 +25,11 @@ def parse_dfa(file_name: str) -> Tuple:
 
     automation_tag = root if root.tag == "automaton" else root.find("automaton")
 
-    states = []
+    states = set()
     start_state = None
-    accept_states = []
+    accept_states = set()
 
-    alphabet = []
+    alphabet = set()
     delta = {}
 
     for child in automation_tag:
@@ -38,13 +38,13 @@ def parse_dfa(file_name: str) -> Tuple:
             name = ""
             if attributes:
                 name = attributes.get("id")
-            states.append(name)
+            states.add(name)
 
             for nested_child in child:
                 if nested_child.tag == "initial":
                     start_state = name
                 if nested_child.tag == "final":
-                    accept_states.append(name)
+                    accept_states.add(name)
         if child.tag == "transition":
             from_state = None
             to_state = None
@@ -59,7 +59,7 @@ def parse_dfa(file_name: str) -> Tuple:
                 elif nested_child.tag == "read":
                     read_value = nested_child.text
                     if read_value not in alphabet:
-                        alphabet.append(read_value)
+                        alphabet.add(read_value)
                 delta[from_state][read_value] = to_state
 
     return (states, alphabet, delta, start_state, accept_states)
@@ -110,3 +110,36 @@ def dfa_to_xml(dfa: Tuple) -> str:
             read_tag.text = str(char)
 
     return ElementTree.dump(automation)
+
+
+def union_dfas(dfa_1: Tuple, dfa_2: Tuple) -> Tuple:
+
+    states_1, alpha_1, delta_1, start_state_1, accept_states_1 = dfa_1
+    states_2, alpha_2, delta_2, start_state_2, accept_states_2 = dfa_2
+
+    union_states = set()
+
+    for one_state in states_1:
+        for two_state in states_2:
+            union_states.add((one_state, two_state))
+
+    if alpha_1 != alpha_2:
+        print(alpha_1, alpha_2)
+        raise ValueError
+
+    union_delta = {}
+
+    for state in union_states:
+        one_state, two_state = state
+        for char in alpha_1:
+            if not union_delta.get(state):
+                union_delta[state] = {}
+            union_delta[state][char] = (
+                delta_1[one_state][char],
+                delta_2[two_state][char],
+            )
+
+    union_start_state = start_state_1, start_state_2
+    union_accept_states = accept_states_1.union(accept_states_2)
+
+    return (union_states, alpha_1, union_delta, union_start_state, union_accept_states)

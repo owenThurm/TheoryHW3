@@ -9,3 +9,7 @@ run-hw2-dfalang:
 run-hw2-dfa2xml:
 
 	python3 ./dfa_xml.py
+
+run-hw2-union:
+
+	python3 ./dfa_union.py
