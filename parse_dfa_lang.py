@@ -10,4 +10,3 @@ language = get_language_for_dfa(dfa)
 
 for word in language:
     print_iterable(word, spaces=False)
-

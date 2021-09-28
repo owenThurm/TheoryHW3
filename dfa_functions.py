@@ -1,7 +1,7 @@
 from typing import Tuple, List
 from xml.etree import ElementTree
 from itertools import chain, product
-from utils import print_iterable
+
 
 def run_dfa(dfa: Tuple, input_string: str, curr_state=None) -> bool:
 
@@ -17,6 +17,7 @@ def run_dfa(dfa: Tuple, input_string: str, curr_state=None) -> bool:
     input_string = input_string[1:]
 
     return run_dfa(dfa, input_string, curr_state=delta[curr_state][next_input])
+
 
 def parse_dfa(file_name: str) -> Tuple:
     tree = ElementTree.parse(file_name)
@@ -63,13 +64,14 @@ def parse_dfa(file_name: str) -> Tuple:
 
     return (states, alphabet, delta, start_state, accept_states)
 
+
 def get_language_for_dfa(dfa: Tuple, max_length: int = 5) -> List:
 
     states, alpha, delta, start_state, accept_states = dfa
 
-    all_strings = list(chain.from_iterable(
-        product(alpha, repeat=x) for x in range(max_length+1)
-    ))
+    all_strings = list(
+        chain.from_iterable(product(alpha, repeat=x) for x in range(max_length + 1))
+    )
 
     language = []
 
@@ -79,31 +81,32 @@ def get_language_for_dfa(dfa: Tuple, max_length: int = 5) -> List:
 
     return language
 
+
 def dfa_to_xml(dfa: Tuple) -> str:
 
     states, alpha, delta, start_state, accept_states = dfa
 
-    automation = ElementTree.Element('automaton')
+    automation = ElementTree.Element("automaton")
 
     for state in states:
-        state_tag = ElementTree.SubElement(automation, 'state', attrib={'id': state, 'name': f'q{state}'})
+        state_tag = ElementTree.SubElement(
+            automation, "state", attrib={"id": state, "name": f"q{state}"}
+        )
         if state == start_state:
-            ElementTree.SubElement(state_tag, 'initial')
+            ElementTree.SubElement(state_tag, "initial")
         elif state in accept_states:
-            ElementTree.SubElement(state_tag, 'final')
+            ElementTree.SubElement(state_tag, "final")
 
     for state in states:
         for char in alpha:
-            transition_tag = ElementTree.SubElement(automation, 'transition')
+            transition_tag = ElementTree.SubElement(automation, "transition")
 
-            from_tag = ElementTree.SubElement(transition_tag, 'from')
-            to_tag = ElementTree.SubElement(transition_tag, 'to')
-            read_tag  = ElementTree.SubElement(transition_tag, 'read')
+            from_tag = ElementTree.SubElement(transition_tag, "from")
+            to_tag = ElementTree.SubElement(transition_tag, "to")
+            read_tag = ElementTree.SubElement(transition_tag, "read")
 
             from_tag.text = str(state)
             to_tag.text = str(delta[state][char])
             read_tag.text = str(char)
 
     return ElementTree.dump(automation)
-
-

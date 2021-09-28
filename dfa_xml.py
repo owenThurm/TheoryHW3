@@ -46,4 +46,3 @@ dfa = (states, alpha, delta, start_state, accept_states)
 
 
 dfa_to_xml(dfa)
-
