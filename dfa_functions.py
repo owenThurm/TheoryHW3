@@ -90,7 +90,7 @@ def dfa_to_xml(dfa: Tuple) -> str:
 
     for state in states:
         state_tag = ElementTree.SubElement(
-            automation, "state", attrib={"id": state, "name": f"q{state}"}
+            automation, "state", attrib={"id": state, "name": state}
         )
         if state == start_state:
             ElementTree.SubElement(state_tag, "initial")
