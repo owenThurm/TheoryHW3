@@ -1,4 +1,3 @@
-import sys
 from dfa_functions import dfa_to_xml
 
 STATE_0 = "0"
@@ -46,5 +45,5 @@ accept_states = set([STATE_3])
 dfa = (states, alpha, delta, start_state, accept_states)
 
 
-print(dfa_to_xml(dfa))
+dfa_to_xml(dfa)
 

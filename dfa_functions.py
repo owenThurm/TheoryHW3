@@ -104,6 +104,6 @@ def dfa_to_xml(dfa: Tuple) -> str:
             to_tag.text = str(delta[state][char])
             read_tag.text = str(char)
 
-    return ElementTree.tostring(automation, encoding='utf8', method='xml')
+    return ElementTree.dump(automation)
 
 
