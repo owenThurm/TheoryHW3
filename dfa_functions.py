@@ -83,7 +83,7 @@ def dfa_to_xml(dfa: Tuple) -> str:
 
     states, alpha, delta, start_state, accept_states = dfa
 
-    automation = ElementTree.Element('automation')
+    automation = ElementTree.Element('automaton')
 
     for state in states:
         state_tag = ElementTree.SubElement(automation, 'state', attrib={'id': state, 'name': f'q{state}'})
