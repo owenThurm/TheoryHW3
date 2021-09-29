@@ -94,7 +94,7 @@ def dfa_to_xml(dfa: Tuple) -> str:
         )
         if state == start_state:
             ElementTree.SubElement(state_tag, "initial")
-        elif state in accept_states:
+        if state in accept_states:
             ElementTree.SubElement(state_tag, "final")
 
     for state in states:
