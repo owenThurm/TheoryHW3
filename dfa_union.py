@@ -12,5 +12,3 @@ dfa_2 = parse_dfa(file_2)
 union_dfa = union_dfas(dfa_1, dfa_2)
 
 dfa_to_xml(union_dfa)
-
-print(get_language_for_dfa(union_dfa))
