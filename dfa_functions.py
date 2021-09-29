@@ -148,6 +148,4 @@ def union_dfas(dfa_1: Tuple, dfa_2: Tuple) -> Tuple:
         for accept_2 in accept_states_2:
             union_accept_states.add((accept_1, accept_2))
 
-    print(union_accept_states)
-
     return (union_states, alpha_1, union_delta, union_start_state, union_accept_states)
