@@ -60,7 +60,7 @@ def parse_dfa(file_name: str) -> Tuple:
                     read_value = nested_child.text
                     if read_value not in alphabet:
                         alphabet.add(read_value)
-                delta[from_state][read_value] = to_state
+            delta[from_state][read_value] = to_state
 
     return (states, alphabet, delta, start_state, accept_states)
 
@@ -124,7 +124,6 @@ def union_dfas(dfa_1: Tuple, dfa_2: Tuple) -> Tuple:
             union_states.add((one_state, two_state))
 
     if alpha_1 != alpha_2:
-        print(alpha_1, alpha_2)
         raise ValueError
 
     union_delta = {}
@@ -140,6 +139,15 @@ def union_dfas(dfa_1: Tuple, dfa_2: Tuple) -> Tuple:
             )
 
     union_start_state = start_state_1, start_state_2
-    union_accept_states = accept_states_1.union(accept_states_2)
+    union_accept_states = set()
+    for accept_1 in accept_states_1:
+        for accept_2 in states_2:
+            union_accept_states.add((accept_1, accept_2))
+
+    for accept_1 in states_1:
+        for accept_2 in accept_states_2:
+            union_accept_states.add((accept_1, accept_2))
+
+    print(union_accept_states)
 
     return (union_states, alpha_1, union_delta, union_start_state, union_accept_states)
